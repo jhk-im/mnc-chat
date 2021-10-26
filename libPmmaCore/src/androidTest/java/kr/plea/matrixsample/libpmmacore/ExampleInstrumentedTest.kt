@@ -1,4 +1,4 @@
-package kr.plea.matrixsample.ntapp
+package kr.plea.matrixsample.libpmmacore
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("kr.plea.matrixsample.ntapp", appContext.packageName)
+        assertEquals("kr.plea.matrixsample.libpmmacore.test", appContext.packageName)
     }
 }

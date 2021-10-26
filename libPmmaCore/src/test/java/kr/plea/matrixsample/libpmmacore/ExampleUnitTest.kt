@@ -1,4 +1,4 @@
-package kr.plea.matrixsample.ntapp
+package kr.plea.matrixsample.libpmmacore
 
 import org.junit.Test
 

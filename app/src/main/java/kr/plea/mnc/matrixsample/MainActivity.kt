@@ -1,4 +1,4 @@
-package kr.plea.matrixsample.ntapp
+package kr.plea.mnc.matrixsample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

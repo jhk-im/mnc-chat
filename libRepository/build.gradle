@@ -1,65 +1,44 @@
 plugins {
-    id 'com.android.application'
-    //id 'com.google.gms.google-services'
+    id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-android-extensions'
 }
-
-// map for the version codes
-// x86 must have greater values than arm, see https://software.intel.com/en-us/android/articles/google-play-supports-cpu-architecture-filtering-for-multiple-apk
-// 64 bits have greater value than 32 bits
-ext.abiVersionCodes = ["armeabi-v7a": 1, "arm64-v8a": 2].withDefault { 0 }
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
-    signingConfigs {
-        debug {
-            storeFile file('/Users/leejihwan/plea/git/aos/matrix/mnc-matrix-aos/pmma-debug.keystore')
-            storePassword 'pmma123#@!'
-            keyAlias 'pmma-debug'
-            keyPassword 'pmma123#@!'
-        }
-    }
-
     defaultConfig {
-        applicationId "kr.plea.matrixsample.ntapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "0.0.01"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
 
-            //
             debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
-            // signingConfig signingConfigs.release
-
-            //
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 }
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
     // NOTE: kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -68,10 +47,6 @@ dependencies {
     // NOTE: android
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompatVersion"
     implementation "com.google.android.material:material:$rootProject.ext.materialVersion"
-    annotationProcessor "androidx.annotation:annotation:$rootProject.ext.annotationVersion"
-    implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerviewVersion"
-    implementation "androidx.cardview:cardview:$rootProject.ext.cardviewVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintlayoutVersion"
 
     // NOTE: network
     implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
@@ -80,18 +55,12 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.okhttpVersion"
 
-    // NOTE: test
+    // NOTE: image load
+    // Use Glide library to display image (Gif supported)
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion"
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    // NOTE: matrix
-    implementation project(':libPmmaCore')
-    debugImplementation project(':libMatrixCore-debug')
-
-    // NOTE: ntius-p
-    debugImplementation project(':libNtiusPush-debug')
-
-    // NOTE: repository
-    implementation project(':libRepository')
 }
