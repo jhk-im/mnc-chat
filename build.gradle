@@ -52,6 +52,7 @@ ext {
     // NOTE: debug
     stethoVersion = "1.6.0"
     okioVersion = "2.10.0"
+    timberVersion = "5.0.1"
 
     // NOTE: image load
     glideVersion = "4.12.0"

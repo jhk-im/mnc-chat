@@ -149,6 +149,7 @@ dependencies {
     implementation "com.facebook.stetho:stetho:$rootProject.ext.stethoVersion"
     implementation "com.facebook.stetho:stetho-okhttp3:$rootProject.ext.stethoVersion"
     implementation "com.squareup.okio:okio:$rootProject.ext.okioVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
 
     // NOTE: test
     testImplementation 'junit:junit:4.+'
@@ -176,7 +177,7 @@ task export_save(type: Copy) {
     println 'running task export_save'
 
     from('build/outputs/aar')
-    into('MncMatrixSampleSDK-SDK-'+getHost()+'-'+getDate()+'/')
+    into('MncMatrixSampleSDK-'+getHost()+'-'+getDate()+'/')
 }
 
 task export(type: Copy) {
