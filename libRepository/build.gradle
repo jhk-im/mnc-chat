@@ -16,12 +16,37 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField 'String',  'USER_PLMN',            '""'
+            buildConfigField 'String',  'USER_MSIN',            '""'
+
+            //
+            buildConfigField 'boolean', 'NTIUSP_SSL',           'false'
+            buildConfigField 'String',  'NTIUSP_DOMAIN',        '"112.175.244.227"'
+            //
+            buildConfigField 'String',  'WAS_DOMAIN',           '"http://112.175.244.185:2080"'
+            //
+            buildConfigField 'String',  'NTIUSC_APP_ID',        '"com.yuanta.offmessenger"'
+            buildConfigField 'String',  'NTIUSC_DOMAIN',        '"http://112.175.244.185:8008"'
+            buildConfigField 'String',  'NTIUSC_PUSHER_URL',    '"http://112.175.244.185:2080/_matrix/push/v1/notify"'
 
             debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {
+            buildConfigField 'String',  'USER_PLMN',            '""'
+            buildConfigField 'String',  'USER_MSIN',            '""'
+
+            //
+            buildConfigField 'boolean', 'NTIUSP_SSL',           'true'
+            buildConfigField 'String',  'NTIUSP_DOMAIN',        '"apppush.myasset.com"'
+            //
+            buildConfigField 'String',  'WAS_DOMAIN',           '"https://ordtalk.myasset.com:2443"'
+            //
+            buildConfigField 'String',  'NTIUSC_APP_ID',        '"com.yuanta.offmessenger"'
+            buildConfigField 'String',  'NTIUSC_DOMAIN',        '"https://ordtalk.myasset.com:8443"'
+            buildConfigField 'String',  'NTIUSC_PUSHER_URL',    '"https://ordtalk.myasset.com:2443/_matrix/push/v1/notify"'
+
             debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,6 +84,12 @@ dependencies {
     // Use Glide library to display image (Gif supported)
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.ext.glideVersion"
+
+    // NOTE: debug
+    implementation "com.jakewharton.timber:timber:$rootProject.ext.timberVersion"
+
+    implementation 'androidx.biometric:biometric:1.1.0'
+    annotationProcessor 'androidx.annotation:annotation:1.2.0'
 
     // NOTE: test
     testImplementation 'junit:junit:4.+'

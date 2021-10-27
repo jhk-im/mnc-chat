@@ -1,4 +1,4 @@
-package kr.plea.matrixsample.libpmmacore.im.core
+package kr.plea.matrixsample.libntiuschat.im.core
 
 import android.app.Activity
 import android.content.Context
@@ -7,8 +7,8 @@ import timber.log.Timber
 /**
  * The main application injection point
  */
-class PMMACore private constructor(context: Context) {
-    private val TAG = PMMACore::class.java.simpleName
+class NtiusChatCore private constructor(context: Context) {
+    private val TAG = NtiusChatCore::class.java.simpleName
 
     /** Action **/
     val ACTION_INTRO: String = "kr.plea.mnc.matrixsample.action.INTRO"
@@ -17,11 +17,11 @@ class PMMACore private constructor(context: Context) {
     val ACTION_WEBVIEW: String = "kr.plea.mnc.matrixsample.action.WEBVIEW"
 
     companion object {
-        @Volatile private var INSTANCE: PMMACore? = null
+        @Volatile private var INSTANCE: NtiusChatCore? = null
 
-        @JvmStatic fun getInstance(context: Context): PMMACore =
+        @JvmStatic fun getInstance(context: Context): NtiusChatCore =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: PMMACore(context).also {
+                INSTANCE ?: NtiusChatCore(context).also {
                     INSTANCE = it
                 }
             }

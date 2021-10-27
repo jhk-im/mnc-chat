@@ -1,6 +1,6 @@
 include ':libNtiusPush-debug'
 include ':libRepository'
-include ':libPmmaCore'
+include ':libNtiusChat'
 include ':libMatrixCore-debug'
 include ':app'
 rootProject.name = "MatrixSample"

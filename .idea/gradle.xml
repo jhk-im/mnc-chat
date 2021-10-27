@@ -14,8 +14,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/libMatrixCore-debug" />
+            <option value="$PROJECT_DIR$/libNtiusChat" />
             <option value="$PROJECT_DIR$/libNtiusPush-debug" />
-            <option value="$PROJECT_DIR$/libPmmaCore" />
             <option value="$PROJECT_DIR$/libRepository" />
           </set>
         </option>

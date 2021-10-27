@@ -1,4 +1,4 @@
-package kr.plea.matrixsample.libpmmacore
+package kr.plea.matrixsample.libntiuschat
 
 import org.junit.Test
 

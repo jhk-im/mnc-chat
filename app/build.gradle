@@ -91,11 +91,15 @@ dependencies {
     // Note: do not upgrade to 1.0.3 because it lead to crashes at startup on Android 16
     implementation 'androidx.multidex:multidex:2.0.1'
 
+
+
     // NOTE: matrix
-    implementation project(':libPmmaCore')
     debugImplementation project(':libMatrixCore-debug')
 
-    // NOTE: ntius-p
+    // NOTE: ntius-chat
+    implementation project(':libNtiusChat')
+
+    // NOTE: ntius-push
     debugImplementation project(':libNtiusPush-debug')
 
     // NOTE: repository
