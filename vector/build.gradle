@@ -120,14 +120,14 @@ dependencies {
     // Log
     implementation libs.jakewharton.timber
 
-    // Pref
-    implementation libs.androidx.preferenceKtx
-
-    // UI
-    implementation libs.google.material
-
-    implementation libs.github.glide
-    kapt libs.github.glideCompiler
+    // rx
+    implementation libs.rx.rxKotlin
+    implementation libs.rx.rxAndroid
+    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.1'
+    // RXBinding
+    implementation libs.jakewharton.rxbinding
+    implementation libs.jakewharton.rxbindingAppcompat
+    implementation libs.jakewharton.rxbindingMaterial
 
     // Functional Programming
     implementation libs.arrow.core
@@ -135,6 +135,19 @@ dependencies {
     // DI
     implementation libs.dagger.dagger
     kapt libs.dagger.daggerCompiler
+
+    // Pref
+    implementation libs.androidx.preferenceKtx
+
+    // UI
+    implementation libs.google.material
+
+    // Alerter
+    implementation 'com.tapadoo.android:alerter:7.0.1'
+
+    // Image
+    implementation libs.github.glide
+    kapt libs.github.glideCompiler
 
     // Emoji
     implementation "androidx.emoji:emoji-appcompat:1.1.0"

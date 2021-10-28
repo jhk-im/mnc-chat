@@ -3,16 +3,26 @@ package im.vector.app
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
+import im.vector.app.core.di.DaggerVectorComponent
+import im.vector.app.core.di.HasVectorInjector
+import im.vector.app.core.di.VectorComponent
 
-class VectorApplication : Application() {
+class VectorApplication :
+        Application(),
+        HasVectorInjector {
 
     lateinit var appContext: Context
+    lateinit var vectorComponent: VectorComponent
 
     override fun onCreate() {
         enableStrictModeIfNeeded()
         super.onCreate()
         appContext = this
+        vectorComponent = DaggerVectorComponent.factory().create(this)
+    }
 
+    override fun injector(): VectorComponent {
+        return vectorComponent
     }
 
     /**
@@ -24,9 +34,9 @@ class VectorApplication : Application() {
         if (BuildConfig.ENABLE_STRICT_MODE_LOGS) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
-                .detectAll()
-                .penaltyLog()
-                .build())
+                    .detectAll()
+                    .penaltyLog()
+                    .build())
         }
     }
 }

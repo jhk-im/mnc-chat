@@ -12,16 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package im.vector.app
+package im.vector.app.core.di
 
-import arrow.core.Option
-import im.vector.app.core.utils.BehaviorDataSource
-import org.matrix.android.sdk.api.session.Session
-import javax.inject.Inject
+import android.content.Context
+import dagger.BindsInstance
+import dagger.Component
+import im.vector.app.VectorApplication
 import javax.inject.Singleton
 
+@Component(modules = [VectorModule::class])
 @Singleton
-class ActiveSessionDataSource @Inject constructor() : BehaviorDataSource<Option<Session>>()
+interface VectorComponent {
+
+    fun inject(vectorApplication: VectorApplication)
+
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance context: Context): VectorComponent
+    }
+}
