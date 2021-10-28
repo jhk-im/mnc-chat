@@ -1,3 +1,0 @@
-configurations.maybeCreate("default")
-artifacts.add("default", file('matrix-sdk-debug.aar'))
-artifacts.add("default", file('olm-sdk-release-3.1.4.aar'))

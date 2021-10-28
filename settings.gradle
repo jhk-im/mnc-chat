@@ -1,6 +1,0 @@
-include ':libNtiusPush-debug'
-include ':libRepository'
-include ':libNtiusChat'
-include ':libMatrixCore-debug'
-include ':app'
-rootProject.name = "MatrixSample"
