@@ -30,6 +30,7 @@ import org.matrix.android.sdk.api.auth.AuthenticationService
 import org.matrix.android.sdk.api.auth.HomeServerHistoryService
 import org.matrix.android.sdk.api.legacy.LegacySessionImporter
 import org.matrix.android.sdk.api.raw.RawService
+import org.matrix.android.sdk.api.session.Session
 import javax.inject.Singleton
 
 @Module
@@ -55,6 +56,13 @@ abstract class VectorModule {
         fun providesMatrix(context: Context): Matrix {
             return Matrix.getInstance(context)
         }
+
+        /*@Provides
+        @JvmStatic
+        fun providesCurrentSession(activeSessionHolder: ActiveSessionHolder): Session {
+            // TODO: handle session injection better
+            return activeSessionHolder.getActiveSession()
+        }*/
 
         @Provides
         @JvmStatic
@@ -86,5 +94,11 @@ abstract class VectorModule {
         fun providesApplicationCoroutineScope(): CoroutineScope {
             return CoroutineScope(SupervisorJob() + Dispatchers.Main)
         }
+
+        /*@Provides
+        @JvmStatic
+        fun providesCoroutineDispatchers(): CoroutineDispatchers {
+            return CoroutineDispatchers(io = Dispatchers.IO)
+        }*/
     }
 }

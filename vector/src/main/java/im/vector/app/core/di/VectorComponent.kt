@@ -20,6 +20,7 @@ import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
 import im.vector.app.VectorApplication
+import im.vector.app.features.regeshake.VectorFileLogger
 import javax.inject.Singleton
 
 @Component(modules = [VectorModule::class])
@@ -27,6 +28,8 @@ import javax.inject.Singleton
 interface VectorComponent {
 
     fun inject(vectorApplication: VectorApplication)
+
+    fun vectorFileLogger(): VectorFileLogger
 
     @Component.Factory
     interface Factory {

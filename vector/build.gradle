@@ -117,6 +117,9 @@ dependencies {
     implementation libs.androidx.constraintLayout
     implementation libs.androidx.core
 
+    implementation libs.androidx.lifecycleExtensions
+    implementation libs.androidx.lifecycleLivedata
+
     // Log
     implementation libs.jakewharton.timber
 
@@ -141,6 +144,7 @@ dependencies {
 
     // UI
     implementation libs.google.material
+    implementation 'com.github.vector-im:PFLockScreen-Android:1.0.0-beta12'
 
     // Alerter
     implementation 'com.tapadoo.android:alerter:7.0.1'
@@ -154,6 +158,17 @@ dependencies {
     implementation libs.vanniktech.emojiMaterial
     implementation libs.vanniktech.emojiGoogle
 
+    // WebRTC
+    // org.webrtc:google-webrtc is for development purposes only
+    // implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation('com.facebook.react:react-native-webrtc:1.87.3-jitsi-6624067@aar')
+
+    // Jitsi
+    implementation('org.jitsi.react:jitsi-meet-sdk:3.1.0') {
+        exclude group: 'com.google.firebase'
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.installreferrer'
+    }
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
