@@ -11,7 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/attachment-viewer" />
-            <option value="$PROJECT_DIR$/diff-match-pathch" />
+            <option value="$PROJECT_DIR$/diff-match-patch" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/ui-styles" />
             <option value="$PROJECT_DIR$/matrix-sdk-android" />
