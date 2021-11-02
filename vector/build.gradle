@@ -132,6 +132,15 @@ dependencies {
     implementation libs.jakewharton.rxbindingAppcompat
     implementation libs.jakewharton.rxbindingMaterial
 
+    implementation libs.airbnb.epoxy
+    implementation libs.airbnb.epoxyGlide
+    kapt libs.airbnb.epoxyProcessor
+    implementation libs.airbnb.epoxyPaging
+    implementation libs.airbnb.mvrx
+
+    // Work
+    implementation libs.androidx.work
+
     // Functional Programming
     implementation libs.arrow.core
 
@@ -145,6 +154,7 @@ dependencies {
     // UI
     implementation libs.google.material
     implementation 'com.github.vector-im:PFLockScreen-Android:1.0.0-beta12'
+    implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
     // Alerter
     implementation 'com.tapadoo.android:alerter:7.0.1'
@@ -152,6 +162,10 @@ dependencies {
     // Image
     implementation libs.github.glide
     kapt libs.github.glideCompiler
+    implementation libs.github.bigImageViewer
+    implementation libs.github.glideImageLoader
+    implementation libs.github.progressPieIndicator
+    implementation libs.github.glideImageViewFactory
 
     // Emoji
     implementation "androidx.emoji:emoji-appcompat:1.1.0"

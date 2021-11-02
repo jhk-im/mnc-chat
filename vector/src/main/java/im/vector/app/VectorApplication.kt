@@ -77,7 +77,7 @@ class VectorApplication :
      * 개발자의 실수를 감지하고 해결할 수 있도록 돕는 모드
      **/
     private fun enableStrictModeIfNeeded() {
-        enableStrictModeIfNeeded()
+        //enableStrictModeIfNeeded()
         if (BuildConfig.ENABLE_STRICT_MODE_LOGS) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
