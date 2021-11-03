@@ -17,9 +17,12 @@
 
 package im.vector.app.core.di
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import dagger.Binds
 import dagger.Module
+import dagger.multibindings.IntoMap
+import im.vector.app.features.login.LoginSplashFragment
 
 @Module
 interface FragmentModule {
@@ -30,5 +33,8 @@ interface FragmentModule {
     @Binds
     fun bindFragmentFactory(factory: VectorFragmentFactory): FragmentFactory
 
-
+    @Binds
+    @IntoMap
+    @FragmentKey(LoginSplashFragment::class)
+    fun bindLoginSplashFragment(fragment: LoginSplashFragment): Fragment
 }

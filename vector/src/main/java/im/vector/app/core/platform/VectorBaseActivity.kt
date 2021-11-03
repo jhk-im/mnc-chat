@@ -6,6 +6,7 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,8 @@ import com.bumptech.glide.util.Util
 import com.jakewharton.rxbinding3.view.clicks
 import im.vector.app.core.di.*
 import im.vector.app.core.extensions.restart
+import im.vector.app.features.navigation.Navigator
+import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.themes.ActivityOtherThemes
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -65,8 +68,15 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
     // Data
     // ==========================================================================================
     private lateinit var screenComponent: ScreenComponent
-    private lateinit var fragmentFactory: FragmentFactory
     private lateinit var configurationViewModel: ConfigurationViewModel
+    private lateinit var fragmentFactory: FragmentFactory
+    private lateinit var activeSessionHolder: ActiveSessionHolder
+    private lateinit var vectorPreferences: VectorPreferences
+
+    lateinit var navigator: Navigator
+        private set
+
+    private var savedInstanceState: Bundle? = null
 
     private val uiDisposables = CompositeDisposable()
     private val restorables = ArrayList<Restorable>()
@@ -86,29 +96,33 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Timber.i("onCreate Activity ${javaClass.simpleName}")
-//        val vectorComponent = getVectorComponent()
-//        screenComponent = DaggerScreenComponent.factory().create(vectorComponent, this)
-//        val timeForInjection = measureTimeMillis {
-//            injectWith(screenComponent)
-//        }
+        val vectorComponent = getVectorComponent()
+        screenComponent = DaggerScreenComponent.factory().create(vectorComponent, this)
+        val timeForInjection = measureTimeMillis {
+            injectWith(screenComponent)
+        }
 
-//        Timber.v("Injecting dependencies into ${javaClass.simpleName} took $timeForInjection ms")
-//         fragmentFactory = screenComponent.fragmentFactory()
-//         supportFragmentManager.fragmentFactory = fragmentFactory
+        Timber.v("Injecting dependencies into ${javaClass.simpleName} took $timeForInjection ms")
+        fragmentFactory = screenComponent.fragmentFactory()
+        supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
-
-//        viewModelFactory = screenComponent.viewModelFactory()
-//        configurationViewModel = viewModelProvider.get(ConfigurationViewModel::class.java)
-//        configurationViewModel.activityRestarter.observe(this) {
-//            if (!it.hasBeenHandled) {
-//                // Recreate the Activity because configuration has changed
-//                restart()
-//            }
-//        }
+        navigator = screenComponent.navigator()
+        vectorPreferences = vectorComponent.vectorPreferences()
+        activeSessionHolder = screenComponent.activeSessionHolder()
+        viewModelFactory = screenComponent.viewModelFactory()
+        configurationViewModel = viewModelProvider.get(ConfigurationViewModel::class.java)
+        configurationViewModel.activityRestarter.observe(this) {
+            if (!it.hasBeenHandled) {
+                // Recreate the Activity because configuration has changed
+                restart()
+            }
+        }
 
         views = getBinding()
         setContentView(views.root)
+
+        initUiAndData()
     }
 
     override fun injector(): ScreenComponent {
@@ -147,8 +161,35 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
     // ==========================================================================================
     abstract fun getBinding(): VB
 
+    open fun initUiAndData() = Unit
+
+    // ==========================================================================================
+    // PUBLIC METHODS
+    // ==========================================================================================
+    open fun getCoordinatorLayout(): CoordinatorLayout? = null
+
     /**
      * Return a object containing other themes for this activity
      */
     open fun getOtherThemes(): ActivityOtherThemes = ActivityOtherThemes.Default
+
+    // ==========================================================================================
+    // PROTECTED METHODS
+    // ==========================================================================================
+    /**
+     * Get the saved instance state.
+     * Ensure {@link isFirstCreation()} returns false before calling this
+     *
+     * @return
+     */
+    protected fun getSavedInstanceState(): Bundle {
+        return savedInstanceState!!
+    }
+
+    /**
+     * Is first creation
+     *
+     * @return true if Activity is created for the first time (and not restored by the system)
+     */
+    protected fun isFirstCreation() = savedInstanceState == null
 }

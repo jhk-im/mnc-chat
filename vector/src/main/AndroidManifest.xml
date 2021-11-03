@@ -98,6 +98,26 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />-->
         </activity-alias>
+
+        <!-- exported="true" is required to handle android.intent.action.VIEW for URL redirection-->
+        <activity
+            android:name=".features.login.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Add intent filter to handle redirection URL after SSO login in external browser -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="connect"
+                    android:scheme="element" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

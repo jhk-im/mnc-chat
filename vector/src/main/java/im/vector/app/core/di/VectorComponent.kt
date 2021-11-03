@@ -17,10 +17,21 @@
 package im.vector.app.core.di
 
 import android.content.Context
+import android.content.res.Resources
 import dagger.BindsInstance
 import dagger.Component
+import im.vector.app.EmojiCompatFontProvider
+import im.vector.app.EmojiCompatWrapper
 import im.vector.app.VectorApplication
+import im.vector.app.core.dialogs.UnrecognizedCertificateDialog
+import im.vector.app.core.error.ErrorFormatter
+import im.vector.app.features.navigation.Navigator
+import im.vector.app.features.popup.PopupAlertManager
 import im.vector.app.features.regeshake.VectorFileLogger
+import im.vector.app.features.settings.VectorPreferences
+import im.vector.app.features.ui.UiStateRepository
+import org.matrix.android.sdk.api.auth.AuthenticationService
+import org.matrix.android.sdk.api.auth.HomeServerHistoryService
 import javax.inject.Singleton
 
 @Component(modules = [VectorModule::class])
@@ -29,7 +40,33 @@ interface VectorComponent {
 
     fun inject(vectorApplication: VectorApplication)
 
+    fun appContext(): Context
+
+    fun resources(): Resources
+
+    fun authenticationService(): AuthenticationService
+
+    fun homeServerHistoryService(): HomeServerHistoryService
+
     fun vectorFileLogger(): VectorFileLogger
+
+    fun vectorPreferences(): VectorPreferences
+
+    fun uiStateRepository(): UiStateRepository
+
+    fun activeSessionHolder(): ActiveSessionHolder
+
+    fun navigator(): Navigator
+
+    fun errorFormatter(): ErrorFormatter
+
+    fun alertManager(): PopupAlertManager
+
+    fun unrecognizedCertificateDialog(): UnrecognizedCertificateDialog
+
+    fun emojiCompatFontProvider(): EmojiCompatFontProvider
+
+    fun emojiCompatWrapper(): EmojiCompatWrapper
 
     @Component.Factory
     interface Factory {

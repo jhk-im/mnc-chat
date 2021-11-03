@@ -12,29 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package im.vector.app.core.di
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
-import im.vector.app.core.platform.ConfigurationViewModel
+import androidx.fragment.app.Fragment
+import dagger.MapKey
+import kotlin.reflect.KClass
 
-@Module
-interface ViewModelModule {
-
-    /**
-     * ViewModels with @IntoMap will be injected by this factory
-     */
-    @Binds
-    fun bindViewModelFactory(factory: VectorViewModelFactory): ViewModelProvider.Factory
-
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ConfigurationViewModel::class)
-    fun bindConfigurationViewModel(viewModel: ConfigurationViewModel): ViewModel
-}
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey
+annotation class FragmentKey(val value: KClass<out Fragment>)

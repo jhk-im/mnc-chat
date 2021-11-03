@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-package im.vector.app.core.di
+package im.vector.app.core.platform
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
-import im.vector.app.core.platform.ConfigurationViewModel
-
-@Module
-interface ViewModelModule {
+interface OnBackPressed {
 
     /**
-     * ViewModels with @IntoMap will be injected by this factory
+     * Returns true, if the on back pressed event has been handled by this Fragment.
+     * Otherwise return false
+     * @param toolbarButton true if this is the back button from the toolbar
      */
-    @Binds
-    fun bindViewModelFactory(factory: VectorViewModelFactory): ViewModelProvider.Factory
-
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ConfigurationViewModel::class)
-    fun bindConfigurationViewModel(viewModel: ConfigurationViewModel): ViewModel
+    fun onBackPressed(toolbarButton: Boolean): Boolean
 }

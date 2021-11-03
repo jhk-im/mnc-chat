@@ -20,8 +20,15 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.res.Resources
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import im.vector.app.core.error.DefaultErrorFormatter
+import im.vector.app.core.error.ErrorFormatter
+import im.vector.app.features.navigation.DefaultNavigator
+import im.vector.app.features.navigation.Navigator
+import im.vector.app.features.ui.SharedPreferencesUiStateRepository
+import im.vector.app.features.ui.UiStateRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -57,12 +64,12 @@ abstract class VectorModule {
             return Matrix.getInstance(context)
         }
 
-        /*@Provides
+        @Provides
         @JvmStatic
         fun providesCurrentSession(activeSessionHolder: ActiveSessionHolder): Session {
             // TODO: handle session injection better
             return activeSessionHolder.getActiveSession()
-        }*/
+        }
 
         @Provides
         @JvmStatic
@@ -101,4 +108,13 @@ abstract class VectorModule {
             return CoroutineDispatchers(io = Dispatchers.IO)
         }*/
     }
+
+    @Binds
+    abstract fun bindNavigator(navigator: DefaultNavigator): Navigator
+
+    @Binds
+    abstract fun bindUiStateRepository(repository: SharedPreferencesUiStateRepository): UiStateRepository
+
+    @Binds
+    abstract fun bindErrorFormatter(formatter: DefaultErrorFormatter): ErrorFormatter
 }

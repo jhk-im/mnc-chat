@@ -22,8 +22,11 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import dagger.BindsInstance
 import dagger.Component
+import im.vector.app.core.dialogs.UnrecognizedCertificateDialog
+import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.features.MainActivity
-import kotlinx.coroutines.CoroutineScope
+import im.vector.app.features.login.LoginActivity
+import im.vector.app.features.navigation.Navigator
 
 @Component(
     dependencies = [
@@ -31,24 +34,28 @@ import kotlinx.coroutines.CoroutineScope
     ],
     modules = [
         ViewModelModule::class,
+        FragmentModule::class,
         ScreenModule::class
     ]
 )
-
 @ScreenScope
 interface ScreenComponent {
 
     /* ==========================================================================================
      * Shortcut to VectorComponent elements
      * ========================================================================================== */
-    //fun fragmentFactory(): FragmentFactory
-    //fun viewModelFactory(): ViewModelProvider.Factory
-    //fun appCoroutineScope(): CoroutineScope
+    fun fragmentFactory(): FragmentFactory
+    fun viewModelFactory(): ViewModelProvider.Factory
+    fun activeSessionHolder(): ActiveSessionHolder
+    fun navigator(): Navigator
+    fun errorFormatter(): ErrorFormatter
+    fun unrecognizedCertificateDialog(): UnrecognizedCertificateDialog
 
     /* ==========================================================================================
      * Activities
      * ========================================================================================== */
     fun inject(activity: MainActivity)
+    fun inject(activity: LoginActivity)
 
     /* ==========================================================================================
      * Others

@@ -31,7 +31,7 @@ fun ComponentActivity.registerStartForActivityResult(onResult: (ActivityResult) 
     return registerForActivityResult(ActivityResultContracts.StartActivityForResult(), onResult)
 }
 
-/*fun AppCompatActivity.addFragment(
+fun AppCompatActivity.addFragment(
         frameId: Int,
         fragment: Fragment,
         allowStateLoss: Boolean = false
@@ -106,7 +106,7 @@ fun AppCompatActivity.resetBackstack() {
 
 fun AppCompatActivity.hideKeyboard() {
     currentFocus?.hideKeyboard()
-}*/
+}
 
 fun Activity.restart() {
     startActivity(intent)
