@@ -20,18 +20,18 @@ import android.content.Context
 import android.content.res.Resources
 import dagger.BindsInstance
 import dagger.Component
-import im.vector.app.EmojiCompatFontProvider
-import im.vector.app.EmojiCompatWrapper
-import im.vector.app.VectorApplication
+import im.vector.app.*
 import im.vector.app.core.dialogs.UnrecognizedCertificateDialog
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.features.navigation.Navigator
 import im.vector.app.features.popup.PopupAlertManager
 import im.vector.app.features.regeshake.VectorFileLogger
+import im.vector.app.features.session.SessionListener
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.ui.UiStateRepository
 import org.matrix.android.sdk.api.auth.AuthenticationService
 import org.matrix.android.sdk.api.auth.HomeServerHistoryService
+import org.matrix.android.sdk.api.session.Session
 import javax.inject.Singleton
 
 @Component(modules = [VectorModule::class])
@@ -39,6 +39,10 @@ import javax.inject.Singleton
 interface VectorComponent {
 
     fun inject(vectorApplication: VectorApplication)
+
+    fun sessionListener(): SessionListener
+
+    fun currentSession(): Session
 
     fun appContext(): Context
 
@@ -59,6 +63,10 @@ interface VectorComponent {
     fun navigator(): Navigator
 
     fun errorFormatter(): ErrorFormatter
+
+    fun appStateHandler(): AppStateHandler
+
+    fun activeSessionObservableStore(): ActiveSessionDataSource
 
     fun alertManager(): PopupAlertManager
 

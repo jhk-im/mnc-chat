@@ -25,8 +25,10 @@ import dagger.Component
 import im.vector.app.core.dialogs.UnrecognizedCertificateDialog
 import im.vector.app.core.error.ErrorFormatter
 import im.vector.app.features.MainActivity
+import im.vector.app.features.home.HomeActivity
 import im.vector.app.features.login.LoginActivity
 import im.vector.app.features.navigation.Navigator
+import kotlinx.coroutines.CoroutineScope
 
 @Component(
     dependencies = [
@@ -50,10 +52,13 @@ interface ScreenComponent {
     fun navigator(): Navigator
     fun errorFormatter(): ErrorFormatter
     fun unrecognizedCertificateDialog(): UnrecognizedCertificateDialog
+    //fun autoAcceptInvites(): AutoAcceptInvites
+    //fun appCoroutineScope(): CoroutineScope
 
     /* ==========================================================================================
      * Activities
      * ========================================================================================== */
+    fun inject(activity: HomeActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: LoginActivity)
 

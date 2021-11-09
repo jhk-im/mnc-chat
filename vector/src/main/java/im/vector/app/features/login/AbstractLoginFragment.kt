@@ -39,7 +39,7 @@ import javax.net.ssl.HttpsURLConnection
  */
 abstract class AbstractLoginFragment<VB : ViewBinding> : VectorBaseFragment<VB>(), OnBackPressed {
 
-    //protected val loginViewModel: LoginViewModel by activityViewModel()
+    protected val loginViewModel: LoginViewModel by activityViewModel()
 
     private var isResetPasswordStarted = false
 
@@ -58,9 +58,9 @@ abstract class AbstractLoginFragment<VB : ViewBinding> : VectorBaseFragment<VB>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*loginViewModel.observeViewEvents {
+        loginViewModel.observeViewEvents {
             handleLoginViewEvents(it)
-        }*/
+        }
     }
 
     private fun handleLoginViewEvents(loginViewEvents: LoginViewEvents) {
@@ -108,7 +108,7 @@ abstract class AbstractLoginFragment<VB : ViewBinding> : VectorBaseFragment<VB>(
                 object : UnrecognizedCertificateDialog.Callback {
                     override fun onAccept() {
                         // User accept the certificate
-                        //loginViewModel.handle(LoginAction.UserAcceptCertificate(failure.fingerprint))
+                        loginViewModel.handle(LoginAction.UserAcceptCertificate(failure.fingerprint))
                     }
 
                     override fun onIgnore() {
@@ -163,12 +163,12 @@ abstract class AbstractLoginFragment<VB : ViewBinding> : VectorBaseFragment<VB>(
         }
     }
 
-    /*final override fun invalidate() = withState(loginViewModel) { state ->
+    final override fun invalidate() = withState(loginViewModel) { state ->
         // True when email is sent with success to the homeserver
         isResetPasswordStarted = state.resetPasswordEmail.isNullOrBlank().not()
 
         updateWithState(state)
-    }*/
+    }
 
     open fun updateWithState(state: LoginViewState) {
         // No op by default

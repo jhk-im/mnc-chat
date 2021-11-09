@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.util.Util
+import com.google.android.material.appbar.MaterialToolbar
 import com.jakewharton.rxbinding3.view.clicks
 import im.vector.app.core.di.*
 import im.vector.app.core.extensions.restart
@@ -192,4 +193,16 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
      * @return true if Activity is created for the first time (and not restored by the system)
      */
     protected fun isFirstCreation() = savedInstanceState == null
+
+    /**
+     * Configure the Toolbar, with default back button.
+     */
+    protected fun configureToolbar(toolbar: MaterialToolbar, displayBack: Boolean = true) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayShowHomeEnabled(displayBack)
+            it.setDisplayHomeAsUpEnabled(displayBack)
+            it.title = null
+        }
+    }
 }

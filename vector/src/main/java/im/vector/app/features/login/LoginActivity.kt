@@ -19,55 +19,46 @@ package im.vector.app.features.login
 import android.content.Context
 import android.content.Intent
 import android.view.View
-//import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
-//import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-//import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.airbnb.mvrx.viewModel
+import com.airbnb.mvrx.withState
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-//import com.airbnb.mvrx.withState
-//import com.google.android.material.appbar.MaterialToolbar
-//import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import im.vector.app.R
 import im.vector.app.core.di.ScreenComponent
 import im.vector.app.core.extensions.POP_BACK_STACK_EXCLUSIVE
 import im.vector.app.core.extensions.addFragment
 import im.vector.app.core.extensions.addFragmentToBackstack
 import im.vector.app.core.extensions.exhaustive
-//import im.vector.app.core.extensions.POP_BACK_STACK_EXCLUSIVE
-//import im.vector.app.core.extensions.addFragment
-//import im.vector.app.core.extensions.addFragmentToBackstack
-//import im.vector.app.core.extensions.exhaustive
-//import im.vector.app.core.platform.ToolbarConfigurable
+import im.vector.app.core.platform.ToolbarConfigurable
 import im.vector.app.core.platform.VectorBaseActivity
 import im.vector.app.databinding.ActivityLoginBinding
-//import im.vector.app.features.home.HomeActivity
+import im.vector.app.features.home.HomeActivity
 //import im.vector.app.features.login.terms.LoginTermsFragment
 //import im.vector.app.features.login.terms.LoginTermsFragmentArgument
 //import im.vector.app.features.login.terms.toLocalizedLoginTerms
 import im.vector.app.features.pin.UnlockedActivity
-import javax.inject.Inject
 
-//import org.matrix.android.sdk.api.auth.registration.FlowResult
-//import org.matrix.android.sdk.api.auth.registration.Stage
-//import org.matrix.android.sdk.api.extensions.tryOrNull
-//import javax.inject.Inject
+import org.matrix.android.sdk.api.auth.registration.FlowResult
+import org.matrix.android.sdk.api.auth.registration.Stage
+import org.matrix.android.sdk.api.extensions.tryOrNull
+import javax.inject.Inject
 
 /**
  * The LoginActivity manages the fragment navigation and also display the loading View
  */
-open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*ToolbarConfigurable,*/ UnlockedActivity {
+open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), ToolbarConfigurable, UnlockedActivity {
 
-    //private val loginViewModel: LoginViewModel by viewModel()
+    private val loginViewModel: LoginViewModel by viewModel()
 
-    //@Inject lateinit var loginViewModelFactory: LoginViewModel.Factory
+    @Inject lateinit var loginViewModelFactory: LoginViewModel.Factory
 
     @CallSuper
     override fun injectWith(injector: ScreenComponent) {
@@ -103,21 +94,36 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
             addFirstFragment()
         }
 
-        /*loginViewModel
+        loginViewModel
             .subscribe(this) {
                 updateWithState(it)
             }
 
         loginViewModel.observeViewEvents {
             handleLoginViewEvents(it)
-        }*/
+        }
 
         // Get config extra
-        //val loginConfig = intent.getParcelableExtra<LoginConfig?>(EXTRA_CONFIG)
+        val loginConfig = intent.getParcelableExtra<LoginConfig?>(EXTRA_CONFIG)
         if (isFirstCreation()) {
             // TODO Check this
-            //loginViewModel.handle(LoginAction.InitWith(loginConfig))
+            loginViewModel.handle(LoginAction.InitWith(loginConfig))
         }
+    }
+
+    /**
+     * Handle the SSO redirection here
+     */
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.data
+            ?.let { tryOrNull { it.getQueryParameter("loginToken") } }
+            ?.let { loginViewModel.handle(LoginAction.LoginWithToken(it)) }
+    }
+
+    override fun configure(toolbar: MaterialToolbar) {
+        configureToolbar(toolbar)
     }
 
     protected open fun addFirstFragment() {
@@ -128,7 +134,7 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
         when (loginViewEvents) {
             is LoginViewEvents.RegistrationFlowResult                     -> {
                 // Check that all flows are supported by the application
-                /*if (loginViewEvents.flowResult.missingStages.any { !it.isSupported() }) {
+                if (loginViewEvents.flowResult.missingStages.any { !it.isSupported() }) {
                     // Display a popup to propose use web fallback
                     onRegistrationStageNotSupported()
                 } else {
@@ -145,7 +151,7 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
                             option = commonOption
                         )
                     }
-                }*/
+                }
             }
             is LoginViewEvents.OutdatedHomeserver                         -> {
                 MaterialAlertDialogBuilder(this)
@@ -156,7 +162,7 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
                 Unit
             }
             is LoginViewEvents.OpenServerSelection                        -> {
-                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                addFragmentToBackstack(R.id.loginFragmentContainer,
                     LoginServerSelectionFragment::class.java,
                     option = { ft ->
                         findViewById<View?>(R.id.loginSplashLogo)?.let { ft.addSharedElement(it, ViewCompat.getTransitionName(it) ?: "") }
@@ -166,7 +172,7 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
                         // findViewById<View?>(R.id.loginSplashSubmit)?.let { ft.addSharedElement(it, ViewCompat.getTransitionName(it) ?: "") }
                         // TODO Disabled because it provokes a flickering
                         // ft.setCustomAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
-                    })*/
+                    })
             }
             is LoginViewEvents.OnServerSelectionDone                      -> {
                 //onServerSelectionDone(loginViewEvents)
@@ -183,21 +189,21 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
                 //onWebLoginError(loginViewEvents)
             }
             is LoginViewEvents.OnForgetPasswordClicked                    -> {
-//                addFragmentToBackstack(R.id.loginFragmentContainer,
-//                    LoginResetPasswordFragment::class.java,
-//                    option = commonOption)
+                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginResetPasswordFragment::class.java,
+                    option = commonOption)*/
             }
             is LoginViewEvents.OnResetPasswordSendThreePidDone            -> {
                 supportFragmentManager.popBackStack(FRAGMENT_LOGIN_TAG, POP_BACK_STACK_EXCLUSIVE)
-//                addFragmentToBackstack(R.id.loginFragmentContainer,
-//                    LoginResetPasswordMailConfirmationFragment::class.java,
-//                    option = commonOption)
+                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginResetPasswordMailConfirmationFragment::class.java,
+                    option = commonOption)*/
             }
             is LoginViewEvents.OnResetPasswordMailConfirmationSuccess     -> {
                 supportFragmentManager.popBackStack(FRAGMENT_LOGIN_TAG, POP_BACK_STACK_EXCLUSIVE)
-//                addFragmentToBackstack(R.id.loginFragmentContainer,
-//                    LoginResetPasswordSuccessFragment::class.java,
-//                    option = commonOption)
+                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginResetPasswordSuccessFragment::class.java,
+                    option = commonOption)*/
             }
             is LoginViewEvents.OnResetPasswordMailConfirmationSuccessDone -> {
                 // Go back to the login fragment
@@ -206,20 +212,20 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
             is LoginViewEvents.OnSendEmailSuccess                         -> {
                 // Pop the enter email Fragment
                 supportFragmentManager.popBackStack(FRAGMENT_REGISTRATION_STAGE_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                addFragmentToBackstack(R.id.loginFragmentContainer,
-//                    LoginWaitForEmailFragment::class.java,
-//                    LoginWaitForEmailFragmentArgument(loginViewEvents.email),
-//                    tag = FRAGMENT_REGISTRATION_STAGE_TAG,
-//                    option = commonOption)
+                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginWaitForEmailFragment::class.java,
+                    LoginWaitForEmailFragmentArgument(loginViewEvents.email),
+                    tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                    option = commonOption)*/
             }
             is LoginViewEvents.OnSendMsisdnSuccess                        -> {
                 // Pop the enter Msisdn Fragment
                 supportFragmentManager.popBackStack(FRAGMENT_REGISTRATION_STAGE_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                addFragmentToBackstack(R.id.loginFragmentContainer,
-//                    LoginGenericTextInputFormFragment::class.java,
-//                    LoginGenericTextInputFormFragmentArgument(TextInputFormFragmentMode.ConfirmMsisdn, true, loginViewEvents.msisdn),
-//                    tag = FRAGMENT_REGISTRATION_STAGE_TAG,
-//                    option = commonOption)
+                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginGenericTextInputFormFragment::class.java,
+                    LoginGenericTextInputFormFragmentArgument(TextInputFormFragmentMode.ConfirmMsisdn, true, loginViewEvents.msisdn),
+                    tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                    option = commonOption)*/
             }
             is LoginViewEvents.Failure,
             is LoginViewEvents.Loading                                    ->
@@ -230,18 +236,77 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), /*Toolbar
 
     private fun updateWithState(loginViewState: LoginViewState) {
         if (loginViewState.isUserLogged()) {
-//            val intent = HomeActivity.newIntent(
-//                this,
-//                accountCreation = loginViewState.signMode == SignMode.SignUp
-//            )
-//            startActivity(intent)
-//            finish()
+            val intent = HomeActivity.newIntent(
+                this,
+                accountCreation = loginViewState.signMode == SignMode.SignUp
+            )
+            startActivity(intent)
+            finish()
             return
         }
 
         // Loading
         views.loginLoading.isVisible = loginViewState.isLoading()
     }
+
+    private fun onRegistrationStageNotSupported() {
+        /*MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.app_name)
+            .setMessage(getString(R.string.login_registration_not_supported))
+            .setPositiveButton(R.string.yes) { _, _ ->
+                addFragmentToBackstack(R.id.loginFragmentContainer,
+                    LoginWebFragment::class.java,
+                    option = commonOption)
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()*/
+    }
+
+    private fun handleRegistrationNavigation(flowResult: FlowResult) {
+        // Complete all mandatory stages first
+        val mandatoryStage = flowResult.missingStages.firstOrNull { it.mandatory }
+
+        if (mandatoryStage != null) {
+            //doStage(mandatoryStage)
+        } else {
+            // Consider optional stages
+            val optionalStage = flowResult.missingStages.firstOrNull { !it.mandatory && it !is Stage.Dummy }
+            if (optionalStage == null) {
+                // Should not happen...
+            } else {
+                //doStage(optionalStage)
+            }
+        }
+    }
+
+    /*private fun doStage(stage: Stage) {
+        // Ensure there is no fragment for registration stage in the backstack
+        supportFragmentManager.popBackStack(FRAGMENT_REGISTRATION_STAGE_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        when (stage) {
+            is Stage.ReCaptcha -> addFragmentToBackstack(R.id.loginFragmentContainer,
+                LoginCaptchaFragment::class.java,
+                LoginCaptchaFragmentArgument(stage.publicKey),
+                tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                option = commonOption)
+            is Stage.Email     -> addFragmentToBackstack(R.id.loginFragmentContainer,
+                LoginGenericTextInputFormFragment::class.java,
+                LoginGenericTextInputFormFragmentArgument(TextInputFormFragmentMode.SetEmail, stage.mandatory),
+                tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                option = commonOption)
+            is Stage.Msisdn    -> addFragmentToBackstack(R.id.loginFragmentContainer,
+                LoginGenericTextInputFormFragment::class.java,
+                LoginGenericTextInputFormFragmentArgument(TextInputFormFragmentMode.SetMsisdn, stage.mandatory),
+                tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                option = commonOption)
+            is Stage.Terms     -> addFragmentToBackstack(R.id.loginFragmentContainer,
+                LoginTermsFragment::class.java,
+                LoginTermsFragmentArgument(stage.policies.toLocalizedLoginTerms(getString(R.string.resources_language))),
+                tag = FRAGMENT_REGISTRATION_STAGE_TAG,
+                option = commonOption)
+            else               -> Unit // Should not happen
+        }
+    }*/
 
     companion object {
         private const val FRAGMENT_REGISTRATION_STAGE_TAG = "FRAGMENT_REGISTRATION_STAGE_TAG"

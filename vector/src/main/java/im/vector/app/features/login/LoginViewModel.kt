@@ -32,6 +32,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import im.vector.app.R
 import im.vector.app.core.di.ActiveSessionHolder
+import im.vector.app.core.extensions.configureAndStart
 
 //import im.vector.app.core.extensions.configureAndStart
 import im.vector.app.core.extensions.exhaustive
@@ -87,17 +88,17 @@ class LoginViewModel @AssistedInject constructor(
         }
     }
 
-    /*companion object : MvRxViewModelFactory<LoginViewModel, LoginViewState> {
+    companion object : MvRxViewModelFactory<LoginViewModel, LoginViewState> {
 
         @JvmStatic
         override fun create(viewModelContext: ViewModelContext, state: LoginViewState): LoginViewModel? {
             return when (val activity: FragmentActivity = (viewModelContext as ActivityViewModelContext).activity()) {
-                //is LoginActivity      -> activity.loginViewModelFactory.create(state)
+                is LoginActivity      -> activity.loginViewModelFactory.create(state)
                 //is SoftLogoutActivity -> activity.loginViewModelFactory.create(state)
                 else                  -> error("Invalid Activity")
             }
         }
-    }*/
+    }
 
     // Store the last action, to redo it after user has trusted the untrusted certificate
     private var lastAction: LoginAction? = null
@@ -706,7 +707,7 @@ class LoginViewModel @AssistedInject constructor(
         activeSessionHolder.setActiveSession(session)
 
         authenticationService.reset()
-        //session.configureAndStart(applicationContext)
+        session.configureAndStart(applicationContext)
         setState {
             copy(
                     asyncLoginAction = Success(Unit)

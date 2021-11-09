@@ -120,6 +120,8 @@ dependencies {
     implementation "org.threeten:threetenbp:1.4.0:no-tzdb"
     implementation "com.gabrielittner.threetenbp:lazythreetenbp:0.9.0"
 
+    implementation libs.squareup.moshi
+    kapt libs.squareup.moshiKotlin
     implementation libs.androidx.lifecycleExtensions
     implementation libs.androidx.lifecycleLivedata
 
@@ -156,6 +158,8 @@ dependencies {
 
     // UI
     implementation libs.google.material
+    implementation libs.androidx.autoFill
+    implementation 'me.gujun.android:span:1.7'
     implementation 'com.github.vector-im:PFLockScreen-Android:1.0.0-beta12'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
