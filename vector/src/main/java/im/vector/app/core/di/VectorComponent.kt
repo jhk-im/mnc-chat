@@ -29,6 +29,7 @@ import im.vector.app.features.regeshake.VectorFileLogger
 import im.vector.app.features.session.SessionListener
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.ui.UiStateRepository
+import org.matrix.android.sdk.api.Matrix
 import org.matrix.android.sdk.api.auth.AuthenticationService
 import org.matrix.android.sdk.api.auth.HomeServerHistoryService
 import org.matrix.android.sdk.api.session.Session
@@ -39,6 +40,8 @@ import javax.inject.Singleton
 interface VectorComponent {
 
     fun inject(vectorApplication: VectorApplication)
+
+    fun matrix(): Matrix
 
     fun sessionListener(): SessionListener
 

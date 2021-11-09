@@ -1,10 +1,13 @@
 package im.vector.app.core.platform
 
+import android.content.Context
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
+import android.view.WindowManager
 import androidx.annotation.CallSuper
 import androidx.annotation.MainThread
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.isVisible
@@ -16,9 +19,12 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.jakewharton.rxbinding3.view.clicks
 import im.vector.app.core.di.*
 import im.vector.app.core.extensions.restart
+import im.vector.app.features.configuration.VectorConfiguration
 import im.vector.app.features.navigation.Navigator
+import im.vector.app.features.settings.FontScale
 import im.vector.app.features.settings.VectorPreferences
 import im.vector.app.features.themes.ActivityOtherThemes
+import im.vector.app.features.themes.ThemeUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -93,9 +99,23 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
         return this
     }
 
+    override fun attachBaseContext(base: Context) {
+        val vectorConfiguration = VectorConfiguration(this)
+        super.attachBaseContext(vectorConfiguration.getLocalisedContext(base))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        restorables.forEach { it.onSaveInstanceState(outState) }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        restorables.forEach { it.onRestoreInstanceState(savedInstanceState) }
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
-
         Timber.i("onCreate Activity ${javaClass.simpleName}")
         val vectorComponent = getVectorComponent()
         screenComponent = DaggerScreenComponent.factory().create(vectorComponent, this)
@@ -104,14 +124,17 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
         }
 
         Timber.v("Injecting dependencies into ${javaClass.simpleName} took $timeForInjection ms")
+        ThemeUtils.setActivityTheme(this, getOtherThemes())
         fragmentFactory = screenComponent.fragmentFactory()
         supportFragmentManager.fragmentFactory = fragmentFactory
 
         super.onCreate(savedInstanceState)
-        navigator = screenComponent.navigator()
-        vectorPreferences = vectorComponent.vectorPreferences()
-        activeSessionHolder = screenComponent.activeSessionHolder()
+
         viewModelFactory = screenComponent.viewModelFactory()
+        navigator = screenComponent.navigator()
+        activeSessionHolder = screenComponent.activeSessionHolder()
+
+        vectorPreferences = vectorComponent.vectorPreferences()
         configurationViewModel = viewModelProvider.get(ConfigurationViewModel::class.java)
         configurationViewModel.activityRestarter.observe(this) {
             if (!it.hasBeenHandled) {
@@ -120,10 +143,30 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
             }
         }
 
+        // Set flag FLAG_SECURE
+        if (vectorPreferences.useFlagSecure()) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
+
+        doBeforeSetContentView()
+
+        applyFontSize()
+
         views = getBinding()
         setContentView(views.root)
 
+        this.savedInstanceState = savedInstanceState
+
         initUiAndData()
+
+        val titleRes = getTitleRes()
+        if (titleRes != -1) {
+            supportActionBar?.let {
+                it.setTitle(titleRes)
+            } ?: run {
+                setTitle(titleRes)
+            }
+        }
     }
 
     override fun injector(): ScreenComponent {
@@ -131,6 +174,16 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
     }
 
     protected open fun injectWith(injector: ScreenComponent) = Unit
+
+    /**
+     * This method has to be called for the font size setting be supported correctly.
+     */
+    private fun applyFontSize() {
+        resources.configuration.fontScale = FontScale.getFontScaleValue(this).scale
+
+        @Suppress("DEPRECATION")
+        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
+    }
 
     // ==========================================================================================
     // Handle loading view (also called waiting view or spinner view)
@@ -162,7 +215,12 @@ abstract class VectorBaseActivity<VB : ViewBinding> : AppCompatActivity(), HasSc
     // ==========================================================================================
     abstract fun getBinding(): VB
 
+    open fun doBeforeSetContentView() = Unit
+
     open fun initUiAndData() = Unit
+
+    @StringRes
+    open fun getTitleRes() = -1
 
     // ==========================================================================================
     // PUBLIC METHODS

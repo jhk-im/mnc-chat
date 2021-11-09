@@ -8,6 +8,7 @@ class VectorPreferences @Inject constructor(private val context: Context) {
 
     companion object {
         // Security
+        const val SETTINGS_SECURITY_USE_FLAG_SECURE = "SETTINGS_SECURITY_USE_FLAG_SECURE"
         const val SETTINGS_SECURITY_USE_PIN_CODE_FLAG = "SETTINGS_SECURITY_USE_PIN_CODE_FLAG"
         private const val SETTINGS_SECURITY_USE_GRACE_PERIOD_FLAG = "SETTINGS_SECURITY_USE_GRACE_PERIOD_FLAG"
 
@@ -52,5 +53,12 @@ class VectorPreferences @Inject constructor(private val context: Context) {
         defaultPrefs.edit {
             putBoolean(DID_ASK_TO_ENABLE_SESSION_PUSH, true)
         }
+    }
+
+    /**
+     * The user does not allow screenshots of the application
+     */
+    fun useFlagSecure(): Boolean {
+        return defaultPrefs.getBoolean(SETTINGS_SECURITY_USE_FLAG_SECURE, false)
     }
 }

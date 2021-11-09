@@ -15,20 +15,29 @@ import im.vector.app.core.di.ActiveSessionHolder
 import im.vector.app.core.di.DaggerVectorComponent
 import im.vector.app.core.di.HasVectorInjector
 import im.vector.app.core.di.VectorComponent
+import im.vector.app.features.disclaimer.doNotShowDisclaimerDialog
 import im.vector.app.features.lifecycle.VectorActivityLifecycleCallbacks
 import im.vector.app.features.popup.PopupAlertManager
+import im.vector.app.features.room.VectorRoomDisplayNameFallbackProvider
 import im.vector.app.features.settings.VectorPreferences
 import org.jitsi.meet.sdk.log.JitsiMeetDefaultLogHandler
+import org.matrix.android.sdk.api.MatrixConfiguration
+import org.matrix.android.sdk.api.legacy.LegacySessionImporter
 import timber.log.Timber
+import java.util.concurrent.Executors
 import javax.inject.Inject
+import androidx.work.Configuration as WorkConfiguration
 
 class VectorApplication :
         Application(),
-        HasVectorInjector {
+        HasVectorInjector,
+        MatrixConfiguration.Provider,
+        WorkConfiguration.Provider {
 
     lateinit var appContext: Context
     lateinit var vectorComponent: VectorComponent
 
+    @Inject lateinit var legacySessionImporter: LegacySessionImporter
     @Inject lateinit var emojiCompatFontProvider: EmojiCompatFontProvider
     @Inject lateinit var emojiCompatWrapper: EmojiCompatWrapper
     @Inject lateinit var activeSessionHolder: ActiveSessionHolder
@@ -65,6 +74,13 @@ class VectorApplication :
         )
         FontsContractCompat.requestFont(this, fontRequest, emojiCompatFontProvider, getFontThreadHandler())
         emojiCompatWrapper.init(fontRequest)
+
+        // It can takes time, but do we care?
+        val sessionImported = legacySessionImporter.process()
+        if (!sessionImported) {
+            // Do not display the name change popup
+            doNotShowDisclaimerDialog(this)
+        }
 
         if (/*authenticationService.hasAuthenticatedSessions() && */!activeSessionHolder.hasActiveSession()) {
             //val lastAuthenticatedSession = authenticationService.getLastAuthenticatedSession()!!
@@ -122,5 +138,18 @@ class VectorApplication :
         val handlerThread = HandlerThread("fonts")
         handlerThread.start()
         return Handler(handlerThread.looper)
+    }
+
+    override fun providesMatrixConfiguration(): MatrixConfiguration {
+        return MatrixConfiguration(
+            applicationFlavor = BuildConfig.FLAVOR_DESCRIPTION,
+            roomDisplayNameFallbackProvider = VectorRoomDisplayNameFallbackProvider(this)
+        )
+    }
+
+    override fun getWorkManagerConfiguration(): androidx.work.Configuration {
+        return WorkConfiguration.Builder()
+            .setExecutor(Executors.newCachedThreadPool())
+            .build()
     }
 }

@@ -54,6 +54,7 @@ android {
             buildConfigField "boolean", "LOW_PRIVACY_LOG_ENABLE", "false"
             // Set to true if you want to enable strict mode in debug
             buildConfigField "boolean", "ENABLE_STRICT_MODE_LOGS", "false"
+            buildConfigField "String", "FLAVOR_DESCRIPTION", "\"GooglePlay\""
 
             signingConfig signingConfigs.debug
         }
