@@ -66,7 +66,7 @@ class LoginViewModel @AssistedInject constructor(
         private val applicationContext: Context,
         private val authenticationService: AuthenticationService,
         private val activeSessionHolder: ActiveSessionHolder,
-        //private val homeServerConnectionConfigFactory: HomeServerConnectionConfigFactory,
+        private val homeServerConnectionConfigFactory: HomeServerConnectionConfigFactory,
         //private val reAuthHelper: ReAuthHelper,
         private val stringProvider: StringProvider,
         private val homeServerHistoryService: HomeServerHistoryService
@@ -132,7 +132,7 @@ class LoginViewModel @AssistedInject constructor(
             is LoginAction.UpdateServerType           -> handleUpdateServerType(action)
             is LoginAction.UpdateSignMode             -> handleUpdateSignMode(action)
             is LoginAction.InitWith                   -> handleInitWith(action)
-            is LoginAction.UpdateHomeServer           -> null//handleUpdateHomeserver(action).also { lastAction = action }
+            is LoginAction.UpdateHomeServer           -> handleUpdateHomeServer(action).also { lastAction = action }
             is LoginAction.LoginOrRegister            -> handleLoginOrRegister(action).also { lastAction = action }
             is LoginAction.LoginWithToken             -> handleLoginWithToken(action)
             is LoginAction.WebLoginSuccess            -> null//handleWebLoginSuccess(action)
@@ -732,7 +732,7 @@ class LoginViewModel @AssistedInject constructor(
         }
     }*/
 
-    /*private fun handleUpdateHomeserver(action: LoginAction.UpdateHomeServer) {
+    private fun handleUpdateHomeServer(action: LoginAction.UpdateHomeServer) {
         val homeServerConnectionConfig = homeServerConnectionConfigFactory.create(action.homeServerUrl)
         if (homeServerConnectionConfig == null) {
             // This is invalid
@@ -740,7 +740,7 @@ class LoginViewModel @AssistedInject constructor(
         } else {
             getLoginFlow(homeServerConnectionConfig)
         }
-    }*/
+    }
 
     private fun getLoginFlow(homeServerConnectionConfig: HomeServerConnectionConfig) {
         currentHomeServerConnectionConfig = homeServerConnectionConfig

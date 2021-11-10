@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import im.vector.app.features.login.LoginSignUpSignInSelectionFragment
 import im.vector.app.features.login.LoginSplashFragment
 
 @Module
@@ -37,4 +38,9 @@ interface FragmentModule {
     @IntoMap
     @FragmentKey(LoginSplashFragment::class)
     fun bindLoginSplashFragment(fragment: LoginSplashFragment): Fragment
+
+    @Binds
+    @IntoMap
+    @FragmentKey(LoginSignUpSignInSelectionFragment::class)
+    fun bindLoginSignUpSignInSelectionFragment(fragment: LoginSignUpSignInSelectionFragment): Fragment
 }

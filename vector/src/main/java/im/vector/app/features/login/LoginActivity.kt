@@ -181,9 +181,9 @@ open class LoginActivity : VectorBaseActivity<ActivityLoginBinding>(), ToolbarCo
                 //onSignModeSelected(loginViewEvents)
             }
             is LoginViewEvents.OnLoginFlowRetrieved                       -> {
-                /*addFragmentToBackstack(R.id.loginFragmentContainer,
+                addFragmentToBackstack(R.id.loginFragmentContainer,
                     LoginSignUpSignInSelectionFragment::class.java,
-                    option = commonOption)*/
+                    option = commonOption)
             }
             is LoginViewEvents.OnWebLoginError                            -> {
                 //onWebLoginError(loginViewEvents)

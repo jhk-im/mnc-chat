@@ -61,6 +61,7 @@ interface ScreenComponent {
     fun inject(activity: HomeActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: LoginActivity)
+    //fun inject(activity: ReAuthActivity)
 
     /* ==========================================================================================
      * Others
