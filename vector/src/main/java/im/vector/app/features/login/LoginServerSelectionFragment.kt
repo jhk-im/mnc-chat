@@ -43,10 +43,8 @@ class LoginServerSelectionFragment @Inject constructor() : AbstractLoginFragment
     }
 
     private fun initViews() {
-        views.loginServerChoiceEmsLearnMore.setOnClickListener { learnMore() }
         views.loginServerChoiceMatrixOrg.setOnClickListener { selectMatrixOrg() }
-        views.loginServerChoiceEms.setOnClickListener { selectEMS() }
-        views.loginServerChoiceOther.setOnClickListener { selectOther() }
+        views.loginServerChoiceMNC.setOnClickListener { selectMNCServer() }
         views.loginServerIKnowMyIdSubmit.setOnClickListener { loginWithMatrixId() }
     }
 
@@ -55,26 +53,19 @@ class LoginServerSelectionFragment @Inject constructor() : AbstractLoginFragment
     }
 
     private fun initTextViews() {
-        views.loginServerChoiceEmsLearnMore.text = span {
-            text = getString(R.string.login_server_modular_learn_more)
-            textDecorationLine = "underline"
-        }
+        //
     }
 
     private fun learnMore() {
-        openUrlInChromeCustomTab(requireActivity(), null, EMS_LINK)
+        //openUrlInChromeCustomTab(requireActivity(), null, EMS_LINK)
     }
 
     private fun selectMatrixOrg() {
         loginViewModel.handle(LoginAction.UpdateServerType(ServerType.MatrixOrg))
     }
 
-    private fun selectEMS() {
-        loginViewModel.handle(LoginAction.UpdateServerType(ServerType.EMS))
-    }
-
-    private fun selectOther() {
-        loginViewModel.handle(LoginAction.UpdateServerType(ServerType.Other))
+    private fun selectMNCServer() {
+        loginViewModel.handle(LoginAction.UpdateServerType(ServerType.MNCServer))
     }
 
     private fun loginWithMatrixId() {
